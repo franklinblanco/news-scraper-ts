@@ -3,11 +3,10 @@ import { Article } from "./src/Article";
 import { getNews } from "./src/communicator";
 import { initializeDatabase } from "./src/dao";
 
-const INTERVAL_SECONDS: number = 60; 
+const INTERVAL_SECONDS: number = 5; 
+let currPage: number = 1;
 initializeDatabase().then(async () => {
 
-
-    let currPage: number = 1;
     setInterval(async () => {
         let resp: AxiosResponse = await getNews(currPage);
         console.log(resp.data.d.Results.length);
@@ -27,6 +26,7 @@ initializeDatabase().then(async () => {
             } catch(error){
                 console.log(error);
             }
+            console.log("Done. Page " + currPage);
         });
     }, INTERVAL_SECONDS * 1000);
 });
