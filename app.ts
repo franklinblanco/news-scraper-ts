@@ -1,15 +1,27 @@
 import { AxiosResponse } from "axios";
 import { Article } from "./src/Article";
 import { getNews } from "./src/communicator";
-import { initializeDatabase } from "./src/dao";
+import { getArticlesCount, initializeDatabase } from "./src/dao";
 
 const INTERVAL_SECONDS: number = 60; 
 let currPage: number = 1;
 initializeDatabase().then(async () => {
-
+    try{
+        const currentArticleCount: number = await getArticlesCount();
+        console.log(`Resuming collection of articles. Current article amount: ${currentArticleCount}`);
+        currPage = Math.round(( currentArticleCount / 1000 ) + 1);
+        console.log(`Changing page number to: ${currPage}`);
+    } catch(error){
+        console.log(error);
+    }
     setInterval(async () => {
         let resp: AxiosResponse = await getNews(currPage);
-        console.log(resp.data.d.Results.length);
+
+        try {
+            console.log("Amount of articles to be stored: "+resp.data.d.Results.length);
+        } catch (error) {
+            console.log(error);
+        }
         resp.data.d.Results.forEach(async doc => {
             try{
                 const document = doc.Document;
