@@ -1,0 +1,1 @@
+This project just runs a loop every x amount of seconds of recollecting data from a news source and storing the output on a sqlite3 table.
