@@ -3,7 +3,7 @@ import { Article } from "./src/Article";
 import { getNews } from "./src/communicator";
 import { initializeDatabase } from "./src/dao";
 
-const INTERVAL_SECONDS: number = 5; 
+const INTERVAL_SECONDS: number = 60; 
 let currPage: number = 1;
 initializeDatabase().then(async () => {
 
@@ -22,11 +22,11 @@ initializeDatabase().then(async () => {
                 article.dateModified = new Date(document.Moddate);
                 article.tags = document.Tags;
                 await article.save();
-                currPage = currPage + 1;
             } catch(error){
                 console.log(error);
             }
-            console.log("Done. Page " + currPage);
         });
+        console.log("Done. Page " + currPage);
+        currPage = currPage + 1;
     }, INTERVAL_SECONDS * 1000);
 });
